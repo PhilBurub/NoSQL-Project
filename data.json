@@ -1,0 +1,1018 @@
+{
+	"researchers": [
+		{
+			"name": "Bnair",
+			"age": 20,
+			"organisation": "HU"
+		},
+		{
+			"name": "Jroqon",
+			"age": 52,
+			"organisation": "VM"
+		},
+		{
+			"name": "Xwjodky",
+			"age": 18,
+			"organisation": "ZL"
+		},
+		{
+			"name": "Jtktbhubo",
+			"age": 25,
+			"organisation": "UQ"
+		},
+		{
+			"name": "Ijmh",
+			"age": 33,
+			"organisation": "VM"
+		},
+		{
+			"name": "Qpoxtsmxbr",
+			"age": 38,
+			"organisation": "ZL"
+		},
+		{
+			"name": "Llrvnvfcy",
+			"age": 18,
+			"organisation": "ZL"
+		},
+		{
+			"name": "Myniin",
+			"age": 19,
+			"organisation": "ZL"
+		},
+		{
+			"name": "Weslbl",
+			"age": 44,
+			"organisation": "VM"
+		},
+		{
+			"name": "Vzhjfvyb",
+			"age": 46,
+			"organisation": "ZL"
+		}
+	],
+	"recordings": [
+		{
+			"id": 97809,
+			"location": "D",
+			"date": "21.11.2023",
+			"length": 8081
+		},
+		{
+			"id": 6632,
+			"location": "A",
+			"date": "11.04.2023",
+			"length": 3586
+		},
+		{
+			"id": 62225,
+			"location": "O",
+			"date": "04.03.2023",
+			"length": 927
+		},
+		{
+			"id": 48930,
+			"location": "W",
+			"date": "16.09.2023",
+			"length": 953
+		},
+		{
+			"id": 35405,
+			"location": "M",
+			"date": "30.11.2018",
+			"length": 12710
+		},
+		{
+			"id": 74847,
+			"location": "F",
+			"date": "17.03.2018",
+			"length": 8917
+		},
+		{
+			"id": 9175,
+			"location": "H",
+			"date": "22.04.2019",
+			"length": 5483
+		},
+		{
+			"id": 88272,
+			"location": "X",
+			"date": "19.01.2024",
+			"length": 2093
+		},
+		{
+			"id": 92018,
+			"location": "W",
+			"date": "29.03.2023",
+			"length": 10487
+		},
+		{
+			"id": 66612,
+			"location": "H",
+			"date": "09.12.2016",
+			"length": 16044
+		},
+		{
+			"id": 21468,
+			"location": "H",
+			"date": "11.03.2022",
+			"length": 11941
+		},
+		{
+			"id": 60066,
+			"location": "W",
+			"date": "29.05.2022",
+			"length": 16037
+		},
+		{
+			"id": 92454,
+			"location": "A",
+			"date": "07.07.2018",
+			"length": 17299
+		},
+		{
+			"id": 4797,
+			"location": "K",
+			"date": "21.03.2020",
+			"length": 157
+		},
+		{
+			"id": 42543,
+			"location": "T",
+			"date": "08.09.2018",
+			"length": 1768
+		},
+		{
+			"id": 28622,
+			"location": "Y",
+			"date": "02.10.2019",
+			"length": 16786
+		},
+		{
+			"id": 61487,
+			"location": "X",
+			"date": "25.02.2017",
+			"length": 12248
+		},
+		{
+			"id": 82716,
+			"location": "G",
+			"date": "08.04.2020",
+			"length": 16754
+		},
+		{
+			"id": 52571,
+			"location": "D",
+			"date": "15.02.2022",
+			"length": 7109
+		},
+		{
+			"id": 30654,
+			"location": "Q",
+			"date": "07.06.2020",
+			"length": 7269
+		},
+		{
+			"id": 81859,
+			"location": "H",
+			"date": "29.07.2023",
+			"length": 8551
+		},
+		{
+			"id": 75779,
+			"location": "T",
+			"date": "11.10.2018",
+			"length": 4065
+		},
+		{
+			"id": 65919,
+			"location": "H",
+			"date": "11.08.2022",
+			"length": 778
+		},
+		{
+			"id": 8216,
+			"location": "O",
+			"date": "05.04.2017",
+			"length": 9513
+		},
+		{
+			"id": 84050,
+			"location": "T",
+			"date": "18.02.2022",
+			"length": 14249
+		},
+		{
+			"id": 42849,
+			"location": "G",
+			"date": "04.07.2019",
+			"length": 8200
+		},
+		{
+			"id": 90915,
+			"location": "J",
+			"date": "14.10.2018",
+			"length": 14846
+		},
+		{
+			"id": 71300,
+			"location": "T",
+			"date": "06.04.2018",
+			"length": 2730
+		},
+		{
+			"id": 89441,
+			"location": "Q",
+			"date": "28.07.2023",
+			"length": 17203
+		},
+		{
+			"id": 78125,
+			"location": "D",
+			"date": "02.04.2018",
+			"length": 16333
+		},
+		{
+			"id": 2179,
+			"location": "P",
+			"date": "22.05.2021",
+			"length": 2180
+		},
+		{
+			"id": 43833,
+			"location": "V",
+			"date": "06.10.2023",
+			"length": 7454
+		},
+		{
+			"id": 89793,
+			"location": "G",
+			"date": "01.05.2023",
+			"length": 6694
+		},
+		{
+			"id": 16652,
+			"location": "D",
+			"date": "06.07.2018",
+			"length": 7743
+		},
+		{
+			"id": 22487,
+			"location": "R",
+			"date": "07.05.2022",
+			"length": 5909
+		},
+		{
+			"id": 39678,
+			"location": "S",
+			"date": "16.07.2017",
+			"length": 10723
+		},
+		{
+			"id": 66786,
+			"location": "F",
+			"date": "16.05.2023",
+			"length": 4068
+		},
+		{
+			"id": 11054,
+			"location": "C",
+			"date": "20.09.2023",
+			"length": 13433
+		},
+		{
+			"id": 38784,
+			"location": "U",
+			"date": "20.01.2020",
+			"length": 6117
+		},
+		{
+			"id": 2620,
+			"location": "Z",
+			"date": "15.11.2017",
+			"length": 11379
+		},
+		{
+			"id": 23561,
+			"location": "L",
+			"date": "31.10.2022",
+			"length": 12995
+		},
+		{
+			"id": 93698,
+			"location": "N",
+			"date": "29.07.2019",
+			"length": 10111
+		},
+		{
+			"id": 69253,
+			"location": "M",
+			"date": "14.07.2021",
+			"length": 8393
+		},
+		{
+			"id": 56273,
+			"location": "W",
+			"date": "19.04.2019",
+			"length": 2142
+		},
+		{
+			"id": 2988,
+			"location": "P",
+			"date": "04.08.2023",
+			"length": 6493
+		},
+		{
+			"id": 45152,
+			"location": "Y",
+			"date": "18.06.2023",
+			"length": 10941
+		},
+		{
+			"id": 88038,
+			"location": "O",
+			"date": "26.07.2019",
+			"length": 16590
+		},
+		{
+			"id": 59639,
+			"location": "B",
+			"date": "23.11.2017",
+			"length": 10917
+		},
+		{
+			"id": 77599,
+			"location": "P",
+			"date": "04.11.2019",
+			"length": 7456
+		},
+		{
+			"id": 53515,
+			"location": "R",
+			"date": "14.05.2022",
+			"length": 9799
+		}
+	],
+	"speakers": [
+		{
+			"code": "FNRN",
+			"age": 40,
+			"born in": "X",
+			"gender": "m"
+		},
+		{
+			"code": "OJVQ",
+			"age": 53,
+			"born in": "G",
+			"gender": "m"
+		},
+		{
+			"code": "FIJR",
+			"age": 26,
+			"born in": "J",
+			"gender": "f"
+		},
+		{
+			"code": "SBMT",
+			"age": 38,
+			"born in": "T",
+			"gender": "f"
+		},
+		{
+			"code": "POWO",
+			"age": 36,
+			"born in": "P",
+			"gender": "f"
+		},
+		{
+			"code": "LZCC",
+			"age": 23,
+			"born in": "R",
+			"gender": "f"
+		},
+		{
+			"code": "AOEX",
+			"age": 33,
+			"born in": "Y",
+			"gender": "f"
+		},
+		{
+			"code": "AIYM",
+			"age": 51,
+			"born in": "K",
+			"gender": "m"
+		},
+		{
+			"code": "ROTT",
+			"age": 21,
+			"born in": "Y",
+			"gender": "f"
+		},
+		{
+			"code": "QYWO",
+			"age": 54,
+			"born in": "Z",
+			"gender": "f"
+		},
+		{
+			"code": "APJJ",
+			"age": 46,
+			"born in": "R",
+			"gender": "f"
+		},
+		{
+			"code": "JIYB",
+			"age": 22,
+			"born in": "F",
+			"gender": "m"
+		},
+		{
+			"code": "ZHPE",
+			"age": 29,
+			"born in": "S",
+			"gender": "m"
+		},
+		{
+			"code": "QQKE",
+			"age": 30,
+			"born in": "A",
+			"gender": "m"
+		},
+		{
+			"code": "XPND",
+			"age": 40,
+			"born in": "R",
+			"gender": "m"
+		},
+		{
+			"code": "WLXD",
+			"age": 47,
+			"born in": "C",
+			"gender": "f"
+		},
+		{
+			"code": "TEFW",
+			"age": 52,
+			"born in": "B",
+			"gender": "m"
+		},
+		{
+			"code": "RRLQ",
+			"age": 45,
+			"born in": "K",
+			"gender": "f"
+		},
+		{
+			"code": "XXKK",
+			"age": 57,
+			"born in": "W",
+			"gender": "m"
+		},
+		{
+			"code": "GUHG",
+			"age": 46,
+			"born in": "H",
+			"gender": "n"
+		}
+	],
+	"recorded": [
+		[
+			"Llrvnvfcy",
+			16652
+		],
+		[
+			"Jroqon",
+			89441
+		],
+		[
+			"Weslbl",
+			88038
+		],
+		[
+			"Bnair",
+			90915
+		],
+		[
+			"Weslbl",
+			65919
+		],
+		[
+			"Llrvnvfcy",
+			8216
+		],
+		[
+			"Myniin",
+			9175
+		],
+		[
+			"Myniin",
+			2988
+		],
+		[
+			"Jtktbhubo",
+			60066
+		],
+		[
+			"Vzhjfvyb",
+			2620
+		],
+		[
+			"Xwjodky",
+			38784
+		],
+		[
+			"Myniin",
+			4797
+		],
+		[
+			"Vzhjfvyb",
+			90915
+		],
+		[
+			"Jroqon",
+			97809
+		],
+		[
+			"Weslbl",
+			30654
+		],
+		[
+			"Qpoxtsmxbr",
+			93698
+		],
+		[
+			"Ijmh",
+			22487
+		],
+		[
+			"Bnair",
+			65919
+		],
+		[
+			"Bnair",
+			89441
+		],
+		[
+			"Jroqon",
+			43833
+		],
+		[
+			"Xwjodky",
+			4797
+		],
+		[
+			"Jtktbhubo",
+			74847
+		],
+		[
+			"Qpoxtsmxbr",
+			88038
+		],
+		[
+			"Myniin",
+			16652
+		],
+		[
+			"Vzhjfvyb",
+			97809
+		],
+		[
+			"Weslbl",
+			2988
+		],
+		[
+			"Vzhjfvyb",
+			71300
+		],
+		[
+			"Xwjodky",
+			48930
+		],
+		[
+			"Bnair",
+			82716
+		],
+		[
+			"Bnair",
+			9175
+		],
+		[
+			"Ijmh",
+			9175
+		],
+		[
+			"Qpoxtsmxbr",
+			28622
+		],
+		[
+			"Myniin",
+			66612
+		],
+		[
+			"Ijmh",
+			59639
+		],
+		[
+			"Xwjodky",
+			8216
+		],
+		[
+			"Qpoxtsmxbr",
+			69253
+		],
+		[
+			"Myniin",
+			90915
+		],
+		[
+			"Jtktbhubo",
+			23561
+		],
+		[
+			"Qpoxtsmxbr",
+			88272
+		],
+		[
+			"Llrvnvfcy",
+			43833
+		],
+		[
+			"Llrvnvfcy",
+			2988
+		],
+		[
+			"Xwjodky",
+			42849
+		],
+		[
+			"Llrvnvfcy",
+			4797
+		],
+		[
+			"Ijmh",
+			77599
+		],
+		[
+			"Ijmh",
+			16652
+		],
+		[
+			"Weslbl",
+			56273
+		],
+		[
+			"Weslbl",
+			35405
+		],
+		[
+			"Jtktbhubo",
+			39678
+		],
+		[
+			"Jtktbhubo",
+			38784
+		],
+		[
+			"Weslbl",
+			6632
+		]
+	],
+	"was_recorded": [
+		[
+			"XXKK",
+			97809
+		],
+		[
+			"APJJ",
+			92454
+		],
+		[
+			"AOEX",
+			77599
+		],
+		[
+			"GUHG",
+			93698
+		],
+		[
+			"LZCC",
+			77599
+		],
+		[
+			"XPND",
+			42849
+		],
+		[
+			"OJVQ",
+			93698
+		],
+		[
+			"SBMT",
+			38784
+		],
+		[
+			"TEFW",
+			89793
+		],
+		[
+			"RRLQ",
+			89441
+		],
+		[
+			"APJJ",
+			60066
+		],
+		[
+			"TEFW",
+			8216
+		],
+		[
+			"OJVQ",
+			56273
+		],
+		[
+			"AOEX",
+			74847
+		],
+		[
+			"GUHG",
+			56273
+		],
+		[
+			"POWO",
+			69253
+		],
+		[
+			"FNRN",
+			6632
+		],
+		[
+			"SBMT",
+			2988
+		],
+		[
+			"XXKK",
+			9175
+		],
+		[
+			"ZHPE",
+			45152
+		],
+		[
+			"QYWO",
+			2620
+		],
+		[
+			"WLXD",
+			8216
+		],
+		[
+			"XXKK",
+			59639
+		],
+		[
+			"POWO",
+			2988
+		],
+		[
+			"WLXD",
+			56273
+		],
+		[
+			"FNRN",
+			65919
+		],
+		[
+			"ROTT",
+			16652
+		],
+		[
+			"ZHPE",
+			75779
+		],
+		[
+			"FIJR",
+			28622
+		],
+		[
+			"AOEX",
+			2620
+		],
+		[
+			"FIJR",
+			42543
+		],
+		[
+			"APJJ",
+			66786
+		],
+		[
+			"GUHG",
+			28622
+		],
+		[
+			"FIJR",
+			75779
+		],
+		[
+			"XPND",
+			69253
+		],
+		[
+			"WLXD",
+			6632
+		],
+		[
+			"XPND",
+			38784
+		],
+		[
+			"QYWO",
+			97809
+		],
+		[
+			"ROTT",
+			53515
+		],
+		[
+			"RRLQ",
+			92454
+		],
+		[
+			"WLXD",
+			21468
+		],
+		[
+			"WLXD",
+			22487
+		],
+		[
+			"SBMT",
+			53515
+		],
+		[
+			"FNRN",
+			92018
+		],
+		[
+			"XXKK",
+			42849
+		],
+		[
+			"QYWO",
+			92018
+		],
+		[
+			"FIJR",
+			9175
+		],
+		[
+			"QQKE",
+			45152
+		],
+		[
+			"ROTT",
+			45152
+		],
+		[
+			"APJJ",
+			52571
+		],
+		[
+			"QQKE",
+			89441
+		],
+		[
+			"JIYB",
+			69253
+		],
+		[
+			"FIJR",
+			11054
+		],
+		[
+			"QQKE",
+			84050
+		],
+		[
+			"AOEX",
+			92018
+		],
+		[
+			"SBMT",
+			23561
+		],
+		[
+			"XXKK",
+			22487
+		],
+		[
+			"GUHG",
+			11054
+		],
+		[
+			"QYWO",
+			74847
+		],
+		[
+			"POWO",
+			6632
+		],
+		[
+			"JIYB",
+			2988
+		],
+		[
+			"OJVQ",
+			11054
+		],
+		[
+			"AOEX",
+			11054
+		],
+		[
+			"GUHG",
+			16652
+		],
+		[
+			"SBMT",
+			75779
+		],
+		[
+			"QYWO",
+			8216
+		],
+		[
+			"FNRN",
+			61487
+		],
+		[
+			"POWO",
+			65919
+		],
+		[
+			"OJVQ",
+			74847
+		]
+	],
+	"related": [
+		[
+			"JIYB",
+			"OJVQ"
+		],
+		[
+			"XPND",
+			"QQKE"
+		],
+		[
+			"QQKE",
+			"APJJ"
+		],
+		[
+			"QYWO",
+			"XXKK"
+		],
+		[
+			"FIJR",
+			"WLXD"
+		],
+		[
+			"ROTT",
+			"ZHPE"
+		],
+		[
+			"SBMT",
+			"LZCC"
+		],
+		[
+			"SBMT",
+			"AOEX"
+		],
+		[
+			"RRLQ",
+			"FIJR"
+		],
+		[
+			"AIYM",
+			"XPND"
+		]
+	],
+	"tutors": [
+		[
+			"Xwjodky",
+			"Llrvnvfcy"
+		],
+		[
+			"Vzhjfvyb",
+			"Xwjodky"
+		],
+		[
+			"Llrvnvfcy",
+			"Myniin"
+		],
+		[
+			"Qpoxtsmxbr",
+			"Vzhjfvyb"
+		]
+	]
+}

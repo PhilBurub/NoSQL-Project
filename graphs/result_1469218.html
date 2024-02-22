@@ -1,0 +1,349 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "label": "Bnair", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "label": "Llrvnvfcy", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758", "label": "16652", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:716", "label": "Jroqon", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:753", "label": "89441", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "label": "Weslbl", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:771", "label": "88038", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:751", "label": "90915", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:747", "label": "65919", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748", "label": "8216", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "label": "Myniin", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731", "label": "9175", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769", "label": "2988", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "label": "Jtktbhubo", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:736", "label": "60066", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "label": "Vzhjfvyb", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:764", "label": "2620", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "label": "Xwjodky", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:763", "label": "38784", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:738", "label": "4797", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:725", "label": "97809", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:744", "label": "30654", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "label": "Qpoxtsmxbr", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:766", "label": "93698", "shape": "dot"}, {"group": "Researcher", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "label": "Ijmh", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:759", "label": "22487", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:756", "label": "43833", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:730", "label": "74847", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:752", "label": "71300", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:728", "label": "48930", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:742", "label": "82716", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:740", "label": "28622", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:734", "label": "66612", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:772", "label": "59639", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:767", "label": "69253", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:765", "label": "23561", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:732", "label": "88272", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:750", "label": "42849", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:773", "label": "77599", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:768", "label": "56273", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:729", "label": "35405", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:760", "label": "39678", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:726", "label": "6632", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "label": "XXKK", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "label": "APJJ", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:737", "label": "92454", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "label": "AOEX", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "label": "GUHG", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:780", "label": "LZCC", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "label": "XPND", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "label": "OJVQ", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "label": "SBMT", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:791", "label": "TEFW", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:757", "label": "89793", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:792", "label": "RRLQ", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:779", "label": "POWO", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:775", "label": "FNRN", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:787", "label": "ZHPE", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:770", "label": "45152", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "label": "QYWO", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "label": "WLXD", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783", "label": "ROTT", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:746", "label": "75779", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "label": "FIJR", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:739", "label": "42543", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:761", "label": "66786", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:774", "label": "53515", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:735", "label": "21468", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:733", "label": "92018", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "label": "QQKE", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:743", "label": "52571", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:786", "label": "JIYB", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:762", "label": "11054", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:749", "label": "84050", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:741", "label": "61487", "shape": "dot"}, {"group": "Speaker", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:782", "label": "AIYM", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:727", "label": "62225", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:745", "label": "81859", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:754", "label": "78125", "shape": "dot"}, {"group": "Recording", "id": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:755", "label": "2179", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:716", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:753"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:771"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:751"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:747"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:736"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:764"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:763"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:738"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:751"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:716", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:725"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:744"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:766"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:759"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:747"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:753"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:716", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:756"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:738"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:730"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:771"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:725"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:752"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:728"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:742"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:715", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:740"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:734"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:772"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:767"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:751"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:765"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:732"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:756"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:750"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:738"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:773"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:719", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:768"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:729"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:760"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:718", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:763"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:723", "title": "recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:726"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:725"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:737"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:773"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:766"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:780", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:773"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:750"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:766"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:763"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:791", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:757"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:792", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:753"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:736"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:791", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:768"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:730"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:768"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:779", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:767"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:775", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:726"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:787", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:770"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:764"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:772"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:779", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:768"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:775", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:747"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:787", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:746"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:740"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:764"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:739"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:761"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:740"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:746"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:767"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:726"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:763"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:725"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:774"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:792", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:737"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:735"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:759"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:774"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:775", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:733"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:750"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:733"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:731"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:770"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:770"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:743"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:753"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:786", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:767"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:762"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:749"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:733"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:765"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:759"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:762"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:730"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:779", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:726"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:786", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:769"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:762"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:762"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:794", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:758"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:746"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:748"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:775", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:741"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:779", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:747"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "title": "was_recorded", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:730"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:786", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:776", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:786"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:785", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:788"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:793", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:784"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:790", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:787"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:787", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:783"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:780"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:780", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:781", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:778"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:792", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:777", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:792"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:782", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:789", "title": "related", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:782"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "tutors", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "tutored by", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "tutors", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:717", "title": "tutored by", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721", "title": "tutors", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:722", "title": "tutored by", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:721"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720", "title": "tutors", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724"}, {"arrows": "to", "from": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:724", "title": "tutored by", "to": "4:b7cec7f2-66fc-43e2-82cc-d0c631a36c41:720"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
